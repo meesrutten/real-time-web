@@ -1,0 +1,48 @@
+<%
+  var config = {
+	"default": {
+		"lang": "en",
+		"charset": "UTF-8",
+		"title": "Timeline of artists",
+		"description": "A timeline of artists who lived during the Golden Age in Amsterdam.",
+		"keywords": "",
+		"author": "Meesrutten",
+		"publicPath": "http://localhost:1234",
+		"appColor": "#000000",
+		"analytics": "",
+		"twitter": "",
+		"facebook": "",
+		"instagram": ""
+	}
+}
+%>
+	<!DOCTYPE html>
+	<html lang="<%= config.default.lang %>">
+
+	<head>
+		<meta charset="<%= config.default.charset %>">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title><%= config.default.title %></title>
+		<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+		<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+		<link rel="manifest" href="manifest.json">
+		<link rel="mask-icon" href="safari-pinned-tab.svg" color="#000000">
+		<link rel="shortcut icon" href="favicon.ico">
+		<meta name="msapplication-TileColor" content="#00aba9">
+		<meta name="msapplication-config" content="browserconfig.xml">
+		<meta name="theme-color" content="#000000">
+
+		<style>
+		body{margin:0;font:400 1em/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";background-color:black;color:#efefef}header{height:auto;background-color:black;overflow:hidden;text-align:center}h1{font:900 calc(10vw + 10vh + 10vmin)/0.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";margin:0;word-wrap:break-word;color:white;letter-spacing:-0.1em}@media all and (max-width:60em){h1{font-size:calc(7vw + 7vh + 7vmin)}}img{max-width:100%}::-webkit-scrollbar{width:0.65em;height:0.65em}::-webkit-scrollbar-track{background:rgba(255,255,255,0.1)}::-webkit-scrollbar-thumb{background:white}.creatorWorkYear{position:absolute;transform:translate(-4em,0);font-size:3em}@media all and (max-width:30em){.creatorWorkYear{font-size:1.5em;transform:translate(-4.5em,0)}}.vertical-timeline{display:grid;grid-gap:3rem calc(1vw + 2rem);grid-template-columns:1fr 0.5em 1fr;margin-bottom:10vh;position:relative;z-index:22;padding-top:70vh;max-width:100vw;background-color:rgba(0,0,0,0.6)}@media all and (max-width:30em){.vertical-timeline{padding-top:40vh}}.vertical-timeline [data-type="timeline-line"]{width:.5em;transform:translateX(-0.25em);background-color:white}.vertical-timeline [data-type="timeline-line"]::before{content:'Birth';display:block;position:absolute;top:-2em;transform:translateX(calc(-50% + .125em));color:rgba(255,255,255,0.5)}.vertical-timeline .creatorWorkYear{text-align:right;position:absolute;transform:translate(-4em,0);font-size:3em}@media all and (max-width:30em){.vertical-timeline .creatorWorkYear{font-size:1.5em;transform:translate(-7em,0)}}.vertical-timeline [data-type="timeline-info"]{font-size:1.5em}@media all and (max-width:30em){.vertical-timeline [data-type="timeline-info"]{font-size:1em}}.vertical-timeline [data-type="timeline-info"] .creatorWork{display:block;color:white;text-decoration:none;outline:none;position:relative}.vertical-timeline [data-type="timeline-info"] .creatorWork::before{content:'';display:block;position:absolute;top:0;left:0;z-index:-1;width:100%;height:100%;background-color:rgba(0,0,0,0.75);border:2px solid white;transform:scale(1.25);opacity:0}.vertical-timeline .creatorWork{margin:1em;margin-bottom:3em;max-width:fit-content}.vertical-timeline .creatorWork h2{max-width:10em}.vertical-timeline .creatorWork img{width:10em;height:10em;object-fit:cover}.fixed-content{position:fixed;z-index:1}
+		</style>
+
+		<link rel="stylesheet" href="/styles/main.css">
+		<link rel="stylesheet" href="./scripts/libs/codemirror.css">
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.0/socket.io.js"></script>
+		
+
+	</head>
+
+	<body>

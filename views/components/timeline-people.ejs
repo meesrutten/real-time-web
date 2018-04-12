@@ -1,0 +1,29 @@
+<% var creators = creators;
+	var creatorImages = creatorImages 
+%>
+<div data-view="timeline">
+	<div class="fixed-content">
+		<header>
+			<h1 id="title">Timeline of artists</h1>
+		</header>
+	</div>
+	<section class="vertical-timeline">
+		<article data-type="timeline-years">
+		</article>
+		<div data-type="timeline-line">
+		</div>
+		<article data-type="timeline-info">
+		<% for (let key in creators) { if (creators.hasOwnProperty(key)) { %>		
+			<a class="creatorWork" href="<%- key %>">
+				<div class="creatorWorkYear">
+					<p aria-label="Year of birth is <%- creators[key].birthYear %>"><%- creators[key].birthYear %></p>
+				</div>
+				<h2 id="<%- key %>"><%- creators[key].nameWithoutAlias %></h2>
+				<img class="timeline-image" src="<%- creatorImages[key].workImage %>" alt="An image of <%- creators[key].nameWithoutAlias %>'s work">
+			</a> 
+		<% 
+		}} 
+		%>
+		</article>
+	</section>
+</div>

@@ -1,0 +1,62 @@
+<% var creatorWork = creatorWork;
+var creatorInfo = creatorInfo;
+var creatorWorkImages = creatorWorkImages;
+ %>
+
+<div data-view="person">
+	<div class="fixed-content">
+		<header>
+			<h1 id="title"><%- creatorInfo.creatorName %></h1>
+			<%- include('paintswipe.ejs') %>
+			<p class="lifetime">
+				<span class="birthDate"><%- creatorInfo.birthYear %></span> -
+				<span class="deathDate"><%- creatorInfo.deathYear %></span>
+			</p>
+
+		</header>
+
+	</div>
+	<a href="/#<%- creatorInfo.creatorName %>" data-toggle="timeline">back to timeline</a>
+	<section data-type="timeline" aria-label="Vertical timeline of artists with their birthyear">
+		<article data-type="years">
+			<p>Year</p>
+		</article>
+		<div data-type="line">
+		</div>
+		<article data-type="info">
+			<p>Work</p>
+			
+					<% for (let i = 0; i < creatorWork.length; i++) { %>		
+
+					<div class="creatorWorkYear" aria-label="Year of work is <%- creatorWork[i].workYear %>">
+						<p><%- creatorWork[i].workYear %></p>
+					</div>
+
+					<div class="creatorWork">
+						<h2 lang="nl"><%- creatorWork[i].workTitle %></h2>
+						<img class="timeline-image" src="<%- creatorWorkImages[i].workImage %>" alt="Image of the artists work">
+					</div>
+			<% } %>
+
+		</article>
+	</section>
+</div>
+<script>
+	window.addEventListener('beforeinstallprompt', function(e) {
+	// beforeinstallprompt Event fired
+	console.log('beforeinstallprompt Event fired');
+	// e.userChoice will return a Promise.
+	// For more details read: https://developers.google.com/web/fundamentals/getting-started/primers/promises
+		e.userChoice.then(function(choiceResult) {
+
+			console.log(choiceResult.outcome);
+
+			if(choiceResult.outcome == 'dismissed') {
+			console.log('User cancelled home screen install');
+			}
+			else {
+			console.log('User added to home screen');
+			}
+		});
+	});
+</script>
