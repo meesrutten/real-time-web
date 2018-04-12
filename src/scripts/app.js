@@ -1,12 +1,17 @@
-// Players and such
+//Game
 
 (function () {
+	var socket = io();
+	socket.on('message', function (data) {
+		console.log(data);
+	});
 
 	// Types of players
-	var P1 = '1', P2 = '2';
+	var P1 = 'player1', P2 = 'player2';
 	var socket = io.connect('http://localhost:8000'),
 		player,
 		game;
+	var globalRoomID = 0;
 
 	/**
 	 * Create a new game. Emit newGame event.
@@ -33,6 +38,7 @@
 		}
 		socket.emit('joinGame', { name: name, room: roomID });
 		player = new Player(name, P2);
+
 	});
 
 
@@ -44,10 +50,8 @@
 		var message = 'Hello, ' + data.name +
 			'. Please ask your friend to enter Game ID: ' +
 			data.room + '. Waiting for player 2...';
-
-		// Create game for player 1
-		// game = new Game(data.room);
-		// game.displayBoard(message);
+		globalRoomID = data.room
+		document.querySelector('.room-info').innerHTML = message
 	});
 
 	/**
@@ -56,8 +60,12 @@
 	 */
 	socket.on('player1', function (data) {
 		var message = 'Hello, ' + player.getPlayerName();
-		document.querySelector('#userHello').innerHTML(message);
-		// player.setCurrentTurn(true);
+		document.querySelector('#userHello').innerHTML = message;
+		alert('Someone joined!')
+		document.querySelector('main').style = "display:block;";
+		document.querySelector('#log2').style = "display:none;";
+		myCodeMirror2.setOption('readOnly', true)
+
 	});
 
 	/**
@@ -66,124 +74,134 @@
 	 */
 	socket.on('player2', function (data) {
 		var message = 'Hello, ' + data.name;
-
-		//Create game for player 2
-		// game = new Game(data.room);
-		// game.displayBoard(message);
-		// player.setCurrentTurn(false);
+		document.querySelector('#userHello').innerHTML = message;
+		alert('You joined succesfully!');
+		document.querySelector('main').style = "display:block;";
+		document.querySelector('#log1').style = "display:none;";
+		myCodeMirror1.setOption('readOnly', true)
 	});
 
-	/**
-	 * Opponent played his turn. Update UI.
-	 * Allow the current player to play now. 
-	 */
-	// socket.on('turnPlayed', function (data) {
-	// 	var row = data.tile.split('_')[1][0];
-	// 	var col = data.tile.split('_')[1][1];
-	// 	var opponentType = player.getPlayerType() == P1 ? P2 : P1;
-	// 	game.updateBoard(opponentType, row, col, data.tile);
-	// 	player.setCurrentTurn(true);
+	// socket.on('player1Changes', function (data) {
+	// 	myCodeMirror1.setOption('value', data.changes)
 	// });
+	// socket.on('player2Changes', function (data) {
+	// 	myCodeMirror2.setOption('value', data.changes)
+	// });
+	socket.on('otherPlayer', function (data) {
+		if (data.player === 1) {
+			myCodeMirror2.setOption('value', String(data.changes))
+		} else {
+			myCodeMirror1.setOption('value', String(data.changes))
+		}
+		if(data.lost){
+			alert('you freaking lost!')
+		}
+		// myCodeMirror2.setOption('value', data.changes)
+	});
+
+
 
 	/**
 	 * If the other player wins or game is tied, this event is received. 
 	 * Notify the user about either scenario and end the game. 
 	 */
 	socket.on('gameEnd', function (data) {
-		game.endGame(data.message);
+		// game.endGame(data.message);
 		socket.leave(data.room);
 	})
 
 	/**
 	 * End the game on any err event. 
 	 */
-	// socket.on('err', function (data) {
-	// 	game.endGame(data.message);
-	// });
+	socket.on('err', function (data) {
+		// game.endGame(data.message);
+		socket.leave(data.room);
+	});
+
+	/**
+	 * Player class
+	 */
+	var Player = function (name, type) {
+		this.name = name;
+		this.type = type;
+	}
+
+	/**
+	 * Create a static array that stores all possible win combinations
+	 */
+	Player.wins = false;
+
+	Player.prototype.getPlayerName = function () {
+		return this.name;
+	}
+
+	Player.prototype.getPlayerType = function () {
+		return this.type;
+	}
 
 
+	const editors = document.querySelectorAll('.codeMirror');
+	const codeMirror1 = document.querySelector('#codeMirror1')
+	const codeMirror2 = document.querySelector('#codeMirror2')
+	const log1 = document.querySelector('#log1')
+	const log2 = document.querySelector('#log2')
+	let gameWon = false;
+
+	var myCodeMirror1 = CodeMirror(editors[0], {
+		value: "/*Write your code in this IIFE and use the return as your answer*/\n(function(){\n\nreturn 100;\n\n})()\n",
+		mode: "javascript",
+	});
+	myCodeMirror1.on('change', (event) => {
+		checkChanges(event, 1)
+	})
+
+	var myCodeMirror2 = CodeMirror(editors[1], {
+		value: "/*Write your code in this IIFE and use the return as your answer*/\n(function(){\n\nreturn 100;\n\n})()\n",
+		mode: "javascript",
+	});
+	myCodeMirror2.on('change', (event) => {
+		checkChanges(event, 2)
+	})
+
+	function checkChanges(event, player) {
+		let playerNum = player;
+		const editorArray = [myCodeMirror1, myCodeMirror2]
+		const editorChanges = editorArray[playerNum -= 1].getValue();
+		if (player === 1) {
+			socket.emit('changes', { room: globalRoomID, player: 1, changes: editorChanges })
+		} else {
+			socket.emit('changes', { room: globalRoomID, player: 2, changes: editorChanges })
+		}
+	}
+
+	log1.addEventListener('click', handleOutput)
+	log2.addEventListener('click', handleOutput)
+
+	function handleOutput() {
+		const target = event.target;
+		let editor;
+		target === log1 ? editor = myCodeMirror1 : editor = myCodeMirror2;
+		const editorValue = editor.getValue()
+
+		if (target === log1) {
+			document.getElementById("output1").innerHTML = eval(editorValue)
+			if (Number(document.getElementById("output1").textContent) === 1136) {
+				gameWon = 1;
+				socket.emit('gameWon', { room: globalRoomID, gameWon: gameWon });
+				alert('You won!')
+			} else {
+				alert('thats the wrong answer!')
+			}
+		}
+		else {
+			if (Number(document.getElementById("output2").textContent) === 1136) {
+				gameWon = 2;
+				socket.emit('gameWon', { room: globalRoomID, gameWon: gameWon });
+				alert('You won!')
+			} else {
+				alert('thats the wrong answer!')
+			}
+		}
+	}
 })();
 
-/**
- * Player class
- */
-var Player = function (name, type) {
-	this.name = name;
-	this.type = type;
-}
-
-/**
- * Create a static array that stores all possible win combinations
- */
-Player.wins = false;
-
-Player.prototype.getPlayerName = function () {
-	return this.name;
-}
-
-Player.prototype.getPlayerType = function () {
-	return this.type;
-}
-
-
-
-
-
-
-const editors = document.querySelectorAll('.codeMirror');
-const codeMirror1 = document.querySelector('#codeMirror1')
-const codeMirror2 = document.querySelector('#codeMirror2')
-const log1 = document.querySelector('#log1')
-const log2 = document.querySelector('#log2')
-let gameWon = false;
-
-var myCodeMirror1 = CodeMirror(editors[0], {
-	value: "/*Write your code in this IIFE and use the return as your answer*/\n(function(){\n\nreturn 100;\n\n})()\n",
-	mode: "javascript",
-	lineNumbers: true,
-});
-myCodeMirror1.on('change', () => {
-	checkChanges(1)
-})
-
-var myCodeMirror2 = CodeMirror(editors[1], {
-	value: "/*Write your code in this IIFE and use the return as your answer*/\n(function(){\n\nreturn 100;\n\n})()\n",
-	mode: "javascript",
-	lineNumbers: true,
-});
-myCodeMirror2.on('change', () => {
-	checkChanges(2)
-})
-
-function checkChanges(player){
-	const playerNum = player
-	console.log(player);
-}
-
-log1.addEventListener('click', handleOutput)
-log2.addEventListener('click', handleOutput)
-
-function handleOutput() {
-	const target = event.target;
-	let editor;
-	target === log1 ? editor = myCodeMirror1 : editor = myCodeMirror2;
-	console.log(editor);
-	const editorValue = editor.getValue()
-	console.log(editorValue);
-
-	if (target === log1) {
-		document.getElementById("output1").innerHTML = eval(editorValue)
-		gameWon = 1;
-		socket.emit('gameWon', gameWon);
-	}
-	else {
-		document.getElementById("output2").innerHTML = eval(editorValue)
-		gameWon = 2;
-		socket.emit('gameWon', gameWon);
-	}
-}
-
-var socket = io();
-socket.on('message', function (data) {
-	console.log(data);
-});

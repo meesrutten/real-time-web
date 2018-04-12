@@ -1,1 +1,1 @@
-.editor-holder{display:flex}.codeMirror{width:50vw;resize:none;min-height:30vh}
+main{display:none}.editor-holder{display:block;margin:0 auto}.codeMirror{width:40vw;resize:none;min-height:30vh}

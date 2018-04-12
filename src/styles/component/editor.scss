@@ -1,8 +1,10 @@
 .editor-holder {
-	display: flex;
+	display: block;
+	margin: 0 auto;
+
 }
 .codeMirror {
-	width: 50vw;
+	width: 40vw;
 	resize: none;
 	min-height: 30vh;
 }
