@@ -1,9 +1,10 @@
+const PORT = process.env.PORT || 8000;
 const express = require('express');
 const gzip = require('compression');
 const request = require('request');
 const app = express();
 const server = require('http').createServer(app);
-const io = require('socket.io')(server);
+const io = require('socket.io').listen(server);
 
 app.use(express.static('public'));
 app.set('view engine', 'ejs');
@@ -63,6 +64,6 @@ io.on('connection', function (socket) {
 	})
 });
 
-server.listen(8000, function () {
-	console.log('server is running on port 8000');
+server.listen(PORT, function () {
+	console.log('server is running on port PORT');
 });

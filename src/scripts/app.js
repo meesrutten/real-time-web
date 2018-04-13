@@ -8,8 +8,7 @@
 
 	// Types of players
 	var P1 = 'player1', P2 = 'player2';
-	var socket = io.connect('http://localhost:8000'),
-		player,
+	var player,
 		game;
 	var globalRoomID = 0;
 
@@ -65,7 +64,6 @@
 		document.querySelector('main').style = "display:block;";
 		document.querySelector('#log2').style = "display:none;";
 		myCodeMirror2.setOption('readOnly', true)
-
 	});
 
 	/**
@@ -78,7 +76,7 @@
 		alert('You joined succesfully!');
 		document.querySelector('main').style = "display:block;";
 		document.querySelector('#log1').style = "display:none;";
-		myCodeMirror1.setOption('readOnly', true)
+		myCodeMirror2.setOption('readOnly', true)
 	});
 
 	// socket.on('player1Changes', function (data) {
@@ -91,7 +89,7 @@
 		if (data.player === 1) {
 			myCodeMirror2.setOption('value', String(data.changes))
 		} else {
-			myCodeMirror1.setOption('value', String(data.changes))
+			myCodeMirror2.setOption('value', String(data.changes))
 		}
 		if(data.lost){
 			alert('you freaking lost!')
@@ -166,7 +164,7 @@
 	function checkChanges(event, player) {
 		let playerNum = player;
 		const editorArray = [myCodeMirror1, myCodeMirror2]
-		const editorChanges = editorArray[playerNum -= 1].getValue();
+		const editorChanges = myCodeMirror1.getValue();
 		if (player === 1) {
 			socket.emit('changes', { room: globalRoomID, player: 1, changes: editorChanges })
 		} else {

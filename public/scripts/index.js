@@ -12,9 +12,7 @@
 	// Types of players
 	var P1 = 'player1',
 	    P2 = 'player2';
-	var socket = io.connect('http://localhost:8000'),
-	    player,
-	    game;
+	var player, game;
 	var globalRoomID = 0;
 
 	/**
@@ -28,7 +26,6 @@
 		}
 		socket.emit('createGame', { name: name });
 		player = new Player(name, P1);
-		console.log(player);
 	});
 
 	/** 
@@ -43,8 +40,6 @@
 		}
 		socket.emit('joinGame', { name: name, room: roomID });
 		player = new Player(name, P2);
-
-		console.log(player);
 	});
 
 	/** 
@@ -53,7 +48,6 @@
   */
 	socket.on('newGame', function (data) {
 		var message = 'Hello, ' + data.name + '. Please ask your friend to enter Game ID: ' + data.room + '. Waiting for player 2...';
-		console.log(message);
 		globalRoomID = data.room;
 		document.querySelector('.room-info').innerHTML = message;
 	});
@@ -64,7 +58,6 @@
   */
 	socket.on('player1', function (data) {
 		var message = 'Hello, ' + player.getPlayerName();
-		console.log(message);
 		document.querySelector('#userHello').innerHTML = message;
 		alert('Someone joined!');
 		document.querySelector('main').style = "display:block;";
@@ -82,31 +75,24 @@
 		alert('You joined succesfully!');
 		document.querySelector('main').style = "display:block;";
 		document.querySelector('#log1').style = "display:none;";
-		myCodeMirror1.setOption('readOnly', true);
+		myCodeMirror2.setOption('readOnly', true);
 	});
 
 	// socket.on('player1Changes', function (data) {
-	// 	console.log('player one made changeeees');
-	// 	console.log(data);
 	// 	myCodeMirror1.setOption('value', data.changes)
 	// });
 	// socket.on('player2Changes', function (data) {
-	// 	console.log('player 2 made changeees');
-	// 	console.log(data);
 	// 	myCodeMirror2.setOption('value', data.changes)
 	// });
 	socket.on('otherPlayer', function (data) {
-		console.log('other player log', data);
 		if (data.player === 1) {
 			myCodeMirror2.setOption('value', String(data.changes));
 		} else {
-			myCodeMirror1.setOption('value', String(data.changes));
+			myCodeMirror2.setOption('value', String(data.changes));
 		}
 		if (data.lost) {
 			alert('you freaking lost!');
 		}
-		// console.log('player 2 made changeees');
-		// console.log(data);
 		// myCodeMirror2.setOption('value', data.changes)
 	});
 
@@ -174,8 +160,7 @@
 	function checkChanges(event, player) {
 		var playerNum = player;
 		var editorArray = [myCodeMirror1, myCodeMirror2];
-		var editorChanges = editorArray[playerNum -= 1].getValue();
-		console.log(editorChanges);
+		var editorChanges = myCodeMirror1.getValue();
 		if (player === 1) {
 			socket.emit('changes', { room: globalRoomID, player: 1, changes: editorChanges });
 		} else {
@@ -190,9 +175,7 @@
 		var target = event.target;
 		var editor = void 0;
 		target === log1 ? editor = myCodeMirror1 : editor = myCodeMirror2;
-		console.log(editor);
 		var editorValue = editor.getValue();
-		console.log(editorValue);
 
 		if (target === log1) {
 			document.getElementById("output1").innerHTML = eval(editorValue);

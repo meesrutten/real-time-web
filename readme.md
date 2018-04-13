@@ -1,28 +1,54 @@
-# Real Time Web course repo
+# BattleScripts
 
 This is the course repo for the 2018 edition of the course 'Real Time Web' which is part of the minor 'web' taught at the University of Applied Sciences Amsterdam.
 
-During this course, students will:
-* Build a Node Web App which consumes an external data source through an API and serves a frontend using routing and templating techniques.
-* Create a "live" web app which reflects changes to the back-end data model in reactive front-end views, using real-time, event-based, messaging technologies like sockets or server-sent-events.
-* Describe their work in a professional readme with insightful diagrams showing the life cycle of their data.
+This project is built with `socket.io` and is used for basic communications via a chat.  
 
-## Week 1
-[Slides](https://drive.google.com/open?id=1QxeKsSXnf9poJFWoEe_slHuMb7apB-2eNyUTzi18kcQ)
+<br/>
+<p align="left">
+  <img src="./readme-images/battlescripts.png" alt="Image of battlescripts" height="auto" width="600" style="margin: 2em auto; display: block;">
+</p>
+<br/>
 
-[Assignments](https://drive.google.com/open?id=1OUspHz0enLpoVjbyHMHpAQCjSEmkn8rfHbkoSuwjw4M) (in Dutch)
+- **[About this project](#about-this-project)**  
+- **[Installing](#installing)**  
+- **[Technology used](#technology-used)**  
+- **[Eval](#eval)**  
+- **[Sockets](#sockets)**  
 
-## Week 2
-[Slides](https://drive.google.com/open?id=1-tI7rFjHchbph6FEqpNvDi7XCh3Uy-3bohi_jBdZhcQ)
+## About this project
+BattleScripts is a two player game where you each have to solve the same code problem with JavaScript while being able to see the code your opponent writes. 
 
-[Assignments](https://drive.google.com/open?id=1rjE1bG-rrgfEOssMxCYr7Q0Ba5BJs9WKkvVvjI7y2fQ) (in Dutch)
+## Installing
+install  
+```javascript
+npm install
+```  
+run
+```javascript
+yarn dev
+```
+upload
+```javascript
+now --public
+```
 
-## Week 3
-[Slides](https://drive.google.com/open?id=1BHoe8Fif7nLA00V4WEANJANnObxHBnVnwnQHnfXl4aM)
+## Technology used  
+This project includes:  
+- Node
+- Express
+- Socket.io  
+- CodeMirror
 
-[Assignments](https://drive.google.com/open?id=1zoRC5kDeSQad8vdi62u6AEj_SfpvPzKE7wjYTsdO2JI) (in Dutch)
+## Eval
+`eval()` makes a string into a function and executes it.  
+_eval() is a dangerous function, which executes the code it's passed with the privileges of the caller. If you run eval() with a string that could be affected by a malicious party, you may end up running malicious code on the user's machine with the permissions of your webpage / extension. More importantly, a third-party code can see the scope in which eval() was invoked, which can lead to possible attacks in ways to which the similar Function is not susceptible._ - MDN
 
-## Grading
-In the first and second week you will receive oral feedback on your assignments. In week three you will have a chance to present your final assignment during an oral exam. This assessment will make up 100% of your grade for this course.
-
-> If you're seeing this message on a forked repo, it means one of our students hasn't changed the description yet 😈
+## Sockets
+- `createGame`, creates a new game and room  
+- `joinGame`, lets a second player join a game  
+- `player1`, emits info for player1  
+- `player2`, emits info for player2  
+- `changes`, gets all changes in the editor and emits them
+- `gameEnded`, ends the game
+- `gameWon`, broadcast to certain player who won  

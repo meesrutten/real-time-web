@@ -1,1 +1,1 @@
-main{display:none}.editor-holder{display:block;margin:0 auto}.codeMirror{width:40vw;resize:none;min-height:30vh}
+main{display:none}.editor-holder{display:block;margin:0 auto}.codeMirror{width:40vw;resize:none;min-height:30vh}#log1,#log2{border:1px solid white;font-size:1em;padding:1em 2em;background-color:black;color:white;margin-top:.5em;transition:background-color 300ms ease-out}#log1:hover,#log2:hover{border:1px solid black;background-color:white;color:black}
